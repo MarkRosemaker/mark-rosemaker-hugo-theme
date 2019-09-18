@@ -1,0 +1,65 @@
+{{ define "header"}}
+{{- partial "_shared/navbar.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+<div class="main-content">
+    <header class="text-center">
+        {{ with .Site.Params.index.picture }}
+        <img alt="Site Header" src="{{ . | urlize | relURL }}" class="rounded-circle text-center index-image">
+        {{ end }}
+        <h1 class="index-title">{{ .Site.Params.index.title }}</h1>
+    </header>
+
+    <section class="text-center">
+        {{ with .Site.Params.index.subtitle }}
+        <h3 class="index-sub">{{ . }}</h3>
+        {{ end }}
+        {{ with .Site.Params.index.mdtext }}
+        <h6 class="index-text">{{ . | markdownify }}</h6>
+        {{ end }}
+        <br />
+        {{ with .Site.Params.author.name }}
+        <p>by {{ . }}</p>
+        {{ end }}
+        {{- partial "_shared/social.html" . -}}
+        <br />
+        <p>I teach, discuss and learn
+                online business,
+                <a href="https://www.authenticgermanlearning.com/"       target=_blank>German</a>,
+                philosophy,
+                personal development,
+                coding,
+                and much more.</p>
+        <p>Get started <a href="/blog">browsing blog posts</a>
+        | <a href="https://www.authenticgermanlearning.com/" target=_blank>Learn German</a> from me
+        | Learn more <a href="/about">about me</a>
+        | <a href="/search">Search this site</a></p>
+        <!-- | <a href="">Work with me</a></p> TODO -->
+    </section>
+    <section>
+        <section class="recent-posts">
+            <div class="section-title">
+                <h2><span>Most Recent Posts</span></h2>
+            </div>
+            <div class="row listrecent">
+                {{ $recent := where .Site.Pages "Type" "blog" }}
+                {{ $recentPages := where $recent "IsPage" true }}
+                {{ range first 3 $recentPages.ByDate.Reverse }}
+                {{- partial "list-partials/postbox.html" . -}}
+                {{ end }}
+            </div>
+        </section>
+    </section>
+</div>
+{{ if isset .Site.Params.index "alertbar" }}
+{{ if .Site.Params.index.alertbar }}
+{{- partial "_shared/alertbar.html" . -}}
+{{ end }}
+{{ end }}
+{{end}}
+
+{{ define "footer" }}
+{{ partial "_shared/jumbotron.html" . }}
+{{- partial "_shared/footer.html" . -}}
+{{end}}
