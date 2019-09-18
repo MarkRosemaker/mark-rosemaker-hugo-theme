@@ -1,0 +1,9 @@
+[submodule "themes/mediumish-gohugo-theme"]
+	path = themes/mediumish-gohugo-theme
+	url = https://github.com/lgaida/mediumish-gohugo-theme
+[submodule "themes/jeremylikness-blog"]
+	path = themes/jeremylikness-blog
+	url = https://github.com/JeremyLikness/jeremylikness-blog
+[submodule "themes/mark-rosemaker-hugo-theme"]
+	path = themes/mark-rosemaker-hugo-theme
+	url = https://github.com/MarkRosemaker/mark-rosemaker-hugo-theme

@@ -1,0 +1,204 @@
+baseURL = "https://www.MarkRosemaker.com/"
+languageCode = "en-us"
+title = "Let’s Improve"
+theme = ["mark-rosemaker-hugo-theme","jeremylikness-blog", "mediumish-gohugo-theme"]
+summaryLength = 50
+copyright = "Mark Rosemaker - All Rights Reserved"
+disqusShortname = "markrosemaker"
+googleAnalytics = "UA-138655468-1"
+enableEmoji = true # see https://www.webfx.com/tools/emoji-cheat-sheet/
+enableRobotsTXT = true
+pygmentsStyle = "friendly"
+
+# TODO to test
+enableGitInfo = true # check if it works by checking .LastMod, check also .Date and .PublishDate
+#paginate = 5 # Number of posts per page
+
+[blackfriday]
+  hrefTargetBlank = true # opens *absolute links* in a new tab
+
+[imaging]
+  quality = 100
+
+[permalinks]
+  blog = "/:slug/" # we don't want /blog/ in front
+
+[sitemap]
+    changefreq = "monthly"
+    filename = "sitemap.xml"
+    priority = 0.5
+
+[privacy]
+  [privacy.disqus]
+    disable = false
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+    disable = false
+    respectDoNotTrack = true
+    useSessionStorage = false
+  [privacy.instagram]
+    disable = false
+    simple = false
+  [privacy.twitter]
+    disable = false
+    enableDNT = true
+    simple = false
+  [privacy.vimeo]
+    disable = false
+    simple = false
+  [privacy.youtube]
+    disable = false
+    privacyEnhanced = true
+
+[taxonomies]
+  tag = "tags"
+  year = "years"
+  series = "series"
+  category = "categories" # e.g. philosophy, business, lifestyle
+  person = "people"
+  organization = "orgs"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML", "RSS"]
+  # TODO AMP output
+
+[params]
+  logo = "images/logo.png"
+  description = "Learn to change the world."
+  keywords = ["cloud", "webassembly", "azure", "programming", "coding"]
+
+[params.fa] # Font Awesome
+  version = "5.8.0"
+  integrity = "sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" # use https://www.srihash.org/
+
+[params.index]
+  picture = "/images/jumbotron.jpg"
+  title = "Let’s Improve"
+  subtitle = "Learn to change the world!"
+  alertbar = false
+
+[params.author]
+  name = "Mark Rosemaker"
+  thumbnail = "/images/author.png"
+  description = "Solving problems, one at a time."
+
+[params.csp]
+  childsrc = ["'self'"]
+  fontsrc = ["'self'",
+    "https://use.fontawesome.com",
+    "https://fonts.gstatic.com",
+    "https://public.slidesharecdn.com",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+  formaction = ["'self'",
+    "https://syndication.twitter.com/",
+    "https://platform.twitter.com",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+  framesrc = ["'self'",
+    "https://cse.google.com",
+    "https://player.vimeo.com",
+    "www.youtube.com",
+    "www.youtube-nocookie.com",
+    "https://platform.twitter.com",
+    "https://syndication.twitter.com",
+    "jsfiddle.net",
+    "www.instagram.com",
+    "https://kuula.co",
+    "https://www.slideshare.net",
+    "https://www.google.com",
+    "https://googleads.g.doubleclick.net",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+  imgsrc = ["'self'",
+    #"https://jeremylikness.visualstudio.com",
+    "https://www.google-analytics.com",
+    "https://stats.g.doubleclick.net",
+    "https://pagead2.googlesyndication.com",
+    "*.google.com",
+    "*.gstatic.com",
+    "*.amazon-adsystem.com",
+    "https://www.googleapis.com",
+    "https://images-na.ssl-images-amazon.com",
+    "https://platform.twitter.com",
+    "*.twimg.com",
+    "https://syndication.twitter.com",
+    "data:",
+    "https://files.kuula.io",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+  objectsrc = ["'none'"]
+  stylesrc = ["'self'",
+    "'unsafe-inline'",
+    "https://use.fontawesome.com",
+    "https://fonts.googleapis.com",
+    "https://www.google.com",
+    "https://platform.twitter.com",
+    "*.twimg.com",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+  scriptsrc = ["'self'",
+    "'unsafe-inline'",
+    "https://platform.twitter.com",
+    "https://cdn.syndication.twimg.com",
+    "*.amazon-adsystem.com",
+    "https://www.google-analytics.com",
+    "cse.google.com",
+    "https://www.google.com",
+    "https://pagead2.googlesyndication.com",
+    "https://adservice.google.com",
+    "https://www.googletagservices.com",
+    "jsfiddle.net",
+    "www.instagram.com",
+    "disqus.com",
+    "disquscdn.com",
+    "*.disqus.com",
+    "*.disquscdn.com"]
+
+## Main Menu
+[[menu.main]]
+    name = "🏠 Home"
+    weight = 50
+    identifier = ""
+    url = "/"
+[[menu.main]]
+    name = "🔍 Search"
+    weight = 75
+    identifier = "search"
+    url = "/static/search"
+[[menu.main]]
+    name = "📃 Blog"
+    weight = 100
+    identifier = "blog"
+    url = "/blog"
+#[[menu.main]]
+#    name = "📆 Upcoming Talks"
+#    weight = 150
+#    identifier = "talks"
+#    url = "/blog/2017-08-17_upcoming-talks/"
+#[[menu.main]]
+#    name = "🗣 Past Presentations"
+#    weight = 200
+#    identifier = "presentations"
+#    url = "/blog/2017-08-17_presentations-archive/"
+#[[menu.main]]
+#    name = "▶Videos"
+#    weight = 250
+#    identifier = "videos"
+#    url = "https://www.youtube.com/playlist?list=PL1VfiVM16kp-sQ3D3XDLopmScoaOQibFb"
+[[menu.main]]
+    name = "ℹ About Me"
+    identifier = "about"
+    weight = 300
+    url = "/static/about"
