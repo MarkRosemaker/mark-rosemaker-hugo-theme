@@ -1,0 +1,26 @@
+/*************************
+* General                *
+*************************/
+
+img {
+    margin-bottom: 17.6px;
+}
+
+/*************************
+* Alignment              *
+*************************/
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+/*
+.right {
+    float: right;
+    margin: 0;
+}
+.left {
+    float: left;
+    margin: 0;
+}*/

@@ -1,0 +1,53 @@
+<head>
+	<meta charset="utf-8">
+	{{ partialCached "_shared/csp.html" . }}
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="theme-color" content="#FFFFFF">
+	<link rel="manifest" href="{{ "/manifest.json" | urlize | relURL }}">
+	{{ $img := partial "img/featured.html" . -}}
+	<meta name="thumbnail" content="{{ $img.img.RelPermalink }}">
+	{{ hugo.Generator }}
+	{{ partialCached "_shared/icons.html" . }}
+	{{ if .Params.canonicalUrl }}
+	<link rel="canonical" href="{{ .Params.canonicalUrl }}">{{ end }}{{ $title := printf "%s | %s" .Page.Title .Site.Title }}{{ $mainPage := false }}{{ if eq .Page.Title .Site.Title }}{{ $title = .Page.Title }}{{ $mainPage = true }}{{ end }}
+	<title>{{ $title }}</title>
+	{{ with or .Page.Description .Site.Params.description }}<meta name="description" content="{{ . }}">{{ end }}
+	{{ with or .Params.tags .Site.Params.keywords  }}{{ with delimit . "," }}<meta name="keywords" content="{{ . }}">{{ end }}{{ end }}
+	{{ with .OutputFormats.Get "rss" -}}{{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $title | safeHTML }}{{ end -}}
+	{{ if not $mainPage }}{{ printf `<link rel="alternate" type="application/rss+xml" href="%s" title="%s"/>` ( "/index.xml" | urlize | absURL) .Site.Title | safeHTML }}{{ end }}
+	<!-- twitter, google, and open graph support -->
+	{{ with $img }}
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta itemprop="image" content="{{ $img.img.RelPermalink }}"/>
+		<meta property="twitter:image" content="{{ $img.twitter.RelPermalink }}"/>
+		<meta property="og:image" content="{{ $img.facebook.RelPermalink }}" />
+	{{ else }}
+		<meta name="twitter:card" content="summary" />
+	{{ end }}
+	{{ with $.Site.Params.social.twitter -}}
+	<meta name="twitter:creator" content="@{{ . }}" />
+	<meta name="twitter:site" conteont="@{{ . }}" />
+	{{- end}}
+	<meta property="og:site_name" content="{{ .Site.Title }}"/>
+	{{ $type := "website"}}{{ if .IsPage }}{{ $type = "article" }}{{ end }}
+	<meta property="og:type" content="{{ $type }}"/>
+	<meta property="og:url" content="{{ .Permalink }}" />
+	{{ with .Page.Title }}
+	<meta itemprop="name" content="{{ . }}" />
+	<meta property="og:title" content="{{ . }}" />
+	<meta property="twitter:title" content="{{ . }}" />
+	{{ end }}
+	{{ with or .Page.Description .Site.Params.description }}
+	<meta property="og:description" content="{{ . }}" />
+	<meta property="twitter:description" content="{{ . }}" />
+	<meta itemprop="description" content="{{ . }}" />
+	{{ end }}
+	<!-- end twitter support -->
+	{{ with .Site.Params.fa }}
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v{{ .version }}/css/all.css"
+		integrity="{{ .integrity }}" crossorigin="anonymous">
+	{{ end }}
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i"
+		rel="stylesheet">
+	{{ partial "_shared/css.html" . }}
+</head>

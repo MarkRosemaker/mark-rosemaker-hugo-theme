@@ -1,0 +1,4 @@
+<!-- Take all the styles, but them in a bundle and minify it. -->
+{{- $css := resources.Match  "css/*" | resources.Concat "css/bundle.css" | resources.Minify | resources.Fingerprint "sha512" -}}
+
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">

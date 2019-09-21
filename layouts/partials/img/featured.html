@@ -1,0 +1,18 @@
+<!-- Iterate through all combinations but with a smart order. -->
+{{ $img := partial "img/get.html" (dict "Search" (path.Base .RelPermalink) "Page" $.Page "IgnoreErrors" true)  }}
+{{- range slice "featured" "thumbnail" "cover" -}}
+    {{ $img = $img | default (partial "img/get.html" (dict "Search" . "Page" $.Page  "IgnoreErrors" true)) }}
+{{- end -}}
+
+{{ $images := dict }}
+{{ with $img }}
+    {{- $facebook := $img.Fill "1200x630 Center" | default $img -}}
+    {{- $twitter  := $img.Fill "1024x512 Center" | default $img -}}
+    {{- $images   = dict "img" $img "facebook" $facebook "twitter" $twitter }}
+{{ else}}
+    {{ if and $.Page.Site.Params.debug.missingThumbnails (not $.Page.Draft ) }}
+        {{ errorf "%s is missing a featured image." $.Page }}
+    {{ end }}
+{{ end }}
+
+{{- return $images -}}

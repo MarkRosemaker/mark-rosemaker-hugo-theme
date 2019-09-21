@@ -1,0 +1,76 @@
+twitter:
+  name: Twitter
+  link: https://www.twitter.com/%s
+facebook:
+  name: Facebook
+  link: https://www.facebook.com/%s
+instagram:
+  name: Instagram
+  link: https://www.instagram.com/%s
+github:
+  name: GitHub
+  link: https://github.com/%s
+linkedin:
+  name: LinkedIn
+  link: https://linkedin.com/in/%s
+medium:
+  name: Medium
+  link: https://www.medium.com/@%s
+goodreads:
+  name: Goodreads
+  link: https://www.goodreads.com/%s
+youtube:
+  name: YouTube
+  link: https://www.youtube.com/%s
+vimeo:
+  name: Vimeo
+  link: https://www.vimeo.com/%s
+reddit:
+  name: Reddit
+  link: https://www.reddit.com/user/%s
+amazon:
+  id: amazon
+  name: Shop
+  link: "%s"
+tumblr:
+  name: Tumblr
+  link: https://%s.tumblr.com/
+pinterest:
+  name: Pinterest
+  link: https://www.pinterest.com/%s
+pixabay:
+  name: Pixabay
+  link: https://www.pixabay.com/users/%s
+  icon: fas fa-images
+flickr:
+  name: Flickr
+  link: https://www.flickr.com/photos/%s
+500px:
+  name: 500px
+  link: https://500px.com/%s
+deviantart:
+  name: DeviantArt
+  link: https://www.deviantart.com/%s
+codepen:
+  name: CodePen
+  link: https://codepen.io/%s
+facebook-messenger:
+  id: facebook-messenger
+  name: Messenger
+  link: https://m.me/%s
+whatsapp:
+  name: WhatsApp
+  link: https://api.whatsapp.com/send?%s
+steam:
+  name: Steam
+  link: https://steamcommunity.com/id/%s
+spotify:
+  name: Spotify
+  link: https://open.spotify.com/user/%s
+wikipedia:
+  name: Wikipedia
+  link: https://commons.wikimedia.org/wiki/User:%s
+  icon: fab fa-wikipedia-w
+xing:
+  name: Xing
+  link: https://www.xing.com/profile/%s

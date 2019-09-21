@@ -1,0 +1,50 @@
+<!-- Try to find the image in the page resources. -->
+{{- $image := .Page.Resources.GetMatch .Search -}}
+
+{{ $name := .Search }}
+{{ $types := findRE "\\..*" .Search }}
+
+{{ with $types }}
+    <!-- A type is already defined, remove it from the name. -->
+    {{ $name = replace $name (index $types 0) "" }}
+{{ else }}
+    <!-- Look for all kinds of image types. -->
+    {{ $types = slice ".svg" ".png" ".jpeg" ".jpg" }}
+{{ end }}
+
+<!-- Get all possible matches in either the page resources or uploads. -->
+{{ $uploads := .Page.Site.GetPage "section" "uploads" }}
+{{ $ups := slice $uploads | append $uploads.Pages }}
+{{ range $type := $types }}
+    {{ $search := print $name $type }}
+
+    {{- $image = $image | default ($.Page.Resources.GetMatch $search) -}}
+    {{ range $ups }}{{ if not $image }}
+    {{- $image = .Resources.GetMatch $search -}}
+    {{ end }}{{ end }}
+{{ end }}
+
+{{ if not $image }}
+    {{ if not .IgnoreErrors }}
+        {{ errorf "I did not find the image '%s', neither in the bundle for %s nor in content/uploads/. Please put it in either of those." .Search .Page }}
+    {{ end }}
+{{ else if ne "svg" $image.MediaType.SubType }}
+    {{ $w := $.Width | int }}
+    {{ $h := $.Height | int }}
+
+    {{ with $w }}
+        {{ with $h }}
+            {{ $image = $image.Fill (printf "%sx%s Center" $w $h) }}
+        {{ else }}
+            {{ $image = $image.Resize (printf "%dx" $w) }}
+        {{ end }}
+    {{ else }}
+        {{ with $h }}
+            {{ $image = $image.Resize (printf "x%d" $h) }}
+        {{ end }}
+    {{ end }}
+
+    {{ $image = partial "img/compress.html" $image }}
+{{ end }}
+
+{{ return $image }}

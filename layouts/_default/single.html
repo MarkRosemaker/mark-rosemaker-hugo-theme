@@ -1,0 +1,182 @@
+{{ define "header"}}
+{{- partial "_shared/navbar.html" . -}}
+{{ end }}
+
+{{ define "main" }}
+{{- partial "_shared/title.html" . -}}
+<div class="main-content">
+    <!-- Begin Article
+        ================================================== -->
+    <div class="container">
+        <div class="row">
+            <!-- Post Share -->
+            <div class="col-md-2 pl-0">
+                {{- partial "single-partials/share.html" . -}}
+            </div>
+            <!-- Post -->
+            <div class="col-md-9 flex-first flex-md-unordered">
+                <div class="mainheading">
+                    <!-- Author Box -->
+                    {{ $author := .Page.Params.author | default .Site.Params.author.name }}
+                    {{ if $author }}
+                    <div class="row post-top-meta">
+                        <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                            {{ with partial "img/get.html" (dict "Search" $author "Page" .) }}
+                            <img class="author-thumb" src="{{ .RelPermalink }}"
+                                alt="{{ $author }}">{{ end }}
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a href="/about" class="link-dark">{{ $author }}</a><br>
+                                <span class="author-description">
+                                {{ with .Site.Params.author.description }}
+                                {{ . }}<br>{{end}}
+                                📅 {{ dateFormat "Jan 2, 2006" .PublishDate }}
+                                🕘 {{ .ReadingTime }} min read
+                                💬 {{ .WordCount }} words
+                            </span>
+                        </div>
+                    </div>
+                    {{end}}
+                    <!-- Post Title -->
+                    <h1 class="posttitle">{{ .Title }}</h1>
+                    {{ if .Params.subtitle }}
+                    <p class="subtitle">{{ .Params.subtitle }}</p>
+                    {{ end }}
+                </div>
+
+                <!-- Series -->
+                {{ if .Params.series }}
+                <p>
+                    Part of the series:
+                    <a href="{{ "/series/" | relLangURL }}{{ .Params.series | urlize }}">{{.Params.series}}</a>
+                </p>
+                {{ end }}
+
+                {{ if (.Params.toc) }}
+                <aside>
+                    <ul>
+                        <li><i>In this blog post...</i></li>
+                    </ul>
+                    {{ .TableOfContents }}
+                </aside>
+                {{ end }}
+
+                <!-- Post Content -->
+                <div class="article-post">
+                    {{ .Content}}
+                </div>
+
+                {{ $this := .Permalink }}
+
+                <!-- Series -->
+                {{ if .Params.series }}
+                {{ $seriesUrl := .Params.series | urlize }}
+                <p>
+                    Part of the series:
+                    <a href="{{ "/series/" | relLangURL }}{{ $seriesUrl }}">{{.Params.series}}</a>
+                </p>
+                {{ range $taxonomyname, $taxonomy := .Site.Taxonomies.series }}
+                {{ if eq $taxonomyname $seriesUrl }}
+                <ol>
+                    {{ range $taxonomy.Pages.ByDate }}
+                    {{ if (eq $this .Permalink) }}
+                    <li><strong>{{ .LinkTitle }}</strong></li>
+                    {{ else }}
+                    <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+                    {{ end }}
+                    {{ end }}
+                </ol>
+                {{ end }}
+                {{ end }}
+                <!-- end series -->
+                {{ else }}
+                <!-- related articles -->
+                {{ $tags := .Params.Tags }}
+                {{ $related := newScratch }}
+                {{ $related.Add "pages" slice }}
+                {{ $globalTags := .Site.Taxonomies.tags }}
+                {{ range $tagname, $tagitem := $globalTags }}
+                {{ range $tag := $tags }}
+                {{ if eq (lower $tag | urlize) $tagname }}
+                {{ range $tagitem.Pages }}
+                {{ if and (not ($related.Get .Permalink)) (not (eq $this .Permalink)) }}
+                {{ $related.Add "pages" . }}
+                {{ $related.Set .Permalink $tag }}
+                {{ end }}
+                {{ end }}
+                {{ end }}
+                {{ end }}
+                {{ end }}
+                {{ if gt (len ($related.Get "pages")) 0 }}
+                <p>Related articles:</p>
+                <ul>
+                    {{ range ((shuffle ($related.Get "pages")) | first 5).ByTitle }}
+                    {{ $originalTag := ($related.Get .Permalink) }}
+                    <li>
+                        <a href="{{ .Permalink }}" title="{{ .Params.Description }}">
+                            {{ .LinkTitle }}
+                        </a>&nbsp;
+                        <a href="/tags/{{$originalTag | urlize }}" title="Articles tagged '{{$originalTag}}'">
+                            <strong>({{ $originalTag }})</strong>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+                {{ end }}
+                <!-- end related articles -->
+                {{ end }}
+
+                {{ if .Params.canonicalUrl }}
+                <p>
+                    <em>This post originally appeared at
+                        <a href="{{ .Params.canonicalUrl }}" target="_blank" title="{{ .Title }}">{{ .Title }}</a>
+                    </em>
+                </p>
+                {{end}}
+
+                <!-- Post Categories -->
+                <div class="after-post-tags">
+                    <ul class="tags">
+                        {{ range .Params.tags }}
+                        <li>
+                            <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{.}}</a>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+                <!-- End Categories -->
+
+                {{ if not .Params.noads }}
+                <div>&nbsp;</div>
+                {{ partial "_shared/banner.html" }}
+                <div>&nbsp;</div>
+                {{ end }}
+
+                <!-- Next and PrevPage inside current section -->
+                <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    {{with .NextInSection}}
+                    <a class="d-block col-md-6" href="{{.RelPermalink}}"> &laquo; {{.Title}}</a>
+                    {{end}}
+                    {{with .PrevInSection}}
+                    <a class="d-block col-md-6 text-lg-right" href="{{.RelPermalink}}">{{.Title}} &raquo;</a>
+                    {{end}}
+                    <div class="clearfix"></div>
+                </div>
+                <!-- End Next and PrevPage -->
+            </div>
+            <!-- End Post -->
+        </div>
+    </div>
+    <!-- End Article
+        ================================================== -->
+    {{ if and (.Params.comments) (not .Params.noads) }}
+    {{- partial "single-partials/comments.html" . -}}
+    {{ end }}
+</div>
+{{- partial "_shared/alertbar.html" . -}}
+{{ end }}
+
+{{ define "footer"}}
+{{- partial "_shared/jumbotron.html" . -}}
+{{- partial "_shared/footer.html" . -}}
+{{ end }}

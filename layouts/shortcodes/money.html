@@ -1,0 +1,55 @@
+{{- $base := index .Params "currency" -}}
+{{- $base_amount := float (index .Params "amount") -}}
+
+<!-- define the symbols (symbols for all currencies for which openrates.io provides rates) -->
+{{- $currency_symbols := dict "EUR" "€" "BGN" "Лв" "NZD" "NZ$" "ILS" "₪" "RUB" "₽" "CAD" "C$" "USD" "$" "PHP" "₱" "CHF" "Fr" "ZAR" "R" "AUD" "A$" "JPY" "¥" "TRY" "₺" "HKD" "HK$" "MYR" "RM" "THB" "฿" "HRK" "kn" "NOK" "kr" "IDR" "Rp" "DKK" "kr" "CZK" "Kč" "HUF" "Ft" "GBP" "£" "MXN" "mex$" "KRW" "₩" "ISK" "kr" "SGD" "S$" "BRL" "R$" "PLN" "zł" "INR" "₹" "RON" "L" "CNY" "元" "SEK" "kr" "CRC" "₡" "NGN" "₦" "PYG" "₲" "UAH" "₴" "VND" "₫" -}}
+
+<!-- target EUR for a European website -->
+{{- $target := "EUR" -}}
+
+<!-- get the amount as is -->
+{{- $base_str := "" -}}
+{{- $afterComma := sub $base_amount (math.Floor $base_amount) -}}
+{{- if eq 0.0 $afterComma -}}
+    {{- $base_str = lang.NumFmt 0 $base_amount -}}
+{{- else -}}
+    {{- $base_str = lang.NumFmt 2 $base_amount -}}
+{{- end -}}
+{{- $base_str = print (index $currency_symbols $base) $base_str -}}
+<!-- only write now if it should not replaced by conversion -->
+{{- if ne "true" (index .Params "replace") -}}
+    {{- $base_str -}}
+{{- end -}}
+
+<!-- now add converted amount -->
+{{- $id := print $base $base_amount "converted" -}} <!-- define a unique id for the html span -->
+{{- if eq $base $target -}}
+    {{- if eq "true" (index .Params "replace") -}}
+        <!-- define span for eventual use by the script -->
+        {{- printf "<span class=\"money\" amount=\"%s\" currency=\"%s\" replace=\"true\">~%s</span>" (index .Params "amount") $base $base_str | safeHTML -}}
+    {{- else -}}
+        <!-- define span for eventual use by the script -->
+        {{- printf "<span class=\"money\" amount=\"%s\" currency=\"%s\"></span>" (index .Params "amount") $base | safeHTML -}}
+    {{- end -}}
+{{- else -}}
+    <!-- get the exchange rates -->
+    {{- $converter := getJSON (printf "https://free.currconv.com/api/v7/convert?q=%s_%s&compact=ultra&apiKey=59d7c98598adc207ba24" $base $target) -}}
+
+    {{- $target_amount := mul $base_amount (index $converter (print $base "_" $target)) -}}
+
+    {{- $target_str := "" -}}
+    {{- $afterComma := sub $target_amount (math.Floor $target_amount) -}}
+    {{- if eq 0.0 $afterComma -}}
+        {{- $target_str = lang.NumFmt 0 $target_amount -}}
+    {{- else -}}
+        {{- $target_str = lang.NumFmt 2 $target_amount -}}
+    {{- end -}}
+
+    {{- if eq "true" (index .Params "replace") -}}
+        {{- printf "<span class=\"money\" amount=\"%s\" currency=\"%s\" replace=\"true\">~%s%s</span>" (index .Params "amount") $base (index $currency_symbols $target) $target_str | safeHTML -}}
+    {{- else -}}
+        {{- printf "<span class=\"money\" amount=\"%s\" currency=\"%s\"> (~ %s%s)</span>" (index .Params "amount") $base (index $currency_symbols $target) $target_str | safeHTML -}}
+    {{- end -}}
+
+
+{{- end -}}

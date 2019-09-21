@@ -7,6 +7,7 @@
 {{- $title := replace $slug "-" " " | title -}}
 title: "[translation of {{ $title }}]"
 subtitle: ""
+description: ""
 
 slug: "../[translation of {{ $slug }}]/"
 aliases: ["../[translation of {{ $slug }}]/", "../de/{{ $slug }}/"]
@@ -15,27 +16,17 @@ date: {{ .Date }}
 years: "{{ now.Year }}"
 lastmod: {{ .Date }}
 
-draft: true
-spellchecked: false
-shared: [] # 'twitter', 'facebook'
-meetedgar: [] # insert library entry IDs
-
-# meta data
-seo_title: ""
-description: ""
-
-# dates
-publishDate: {{ .Date }} # update from ISO 8601: https://www.unixtimestamp.com/
-
-# Categorization
-tags: []
+categories: []
+tags:
+ - untagged
 people: []
 orgs: []
-categories: []
-difficulty: []
 
 draft: true
 spellchecked: false
+
+shared: [] # z.B. ['twitter', 'facebook', 'linkedin']
+meetedgar: [] # insert library entry IDs
 ---
 
 

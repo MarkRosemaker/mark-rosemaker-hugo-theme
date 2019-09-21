@@ -1,0 +1,79 @@
+{{ $original := . }}
+
+<!-- OPTIONS -->
+
+<!-- We want our image to be at most 200kb. -->
+{{ $max_file_size := 200000 }}
+
+<!-- We want the image to have maximally 1500 width and 900 height. -->
+{{ $max_width  := 1500 }}
+{{ $max_height :=  900 }}
+
+<!-- PROGRAM -->
+
+ <!-- For some reason, $original.Fit stumps Netlify so we have to calculate the new dimensions ourselves (by first getting the ratio by which we have to decrease the image size). -->
+ {{ $ratio   :=  div $original.Width (float $max_width) }}
+ {{ $ratio_h :=  div $original.Height (float $max_height) }}
+ {{ if gt $ratio_h $ratio }}
+     {{ $ratio = $ratio_h }}
+ {{ end }}
+ {{ if lt $ratio 1.0 }}
+     {{ $ratio = 1.0 }}
+ {{ end }}
+ {{ $new_dim := slice (math.Round (div $original.Width $ratio)) (math.Round (div $original.Height $ratio)) }}
+
+<!--
+    Define boundaries on the quality we choose.
+    Note: We want the highest image quality where the image size is still below our $max_file_size.
+    $lower_q will always give an image size below our maximum, $upper_q maybe.
+-->
+{{ $lower_q := 0 }}
+{{ $upper_q := 100 }}
+
+<!-- We increase our lower bound or increase our upper bound until they are the same. -->
+{{ $image := $original }}
+{{ range $i := seq 0 8 }}
+    {{ if ne $lower_q $upper_q }} <!-- If they are equal, we are done. -->
+
+        <!-- Check quality 100 at first iteration so we don't waste time on all the images who are already small. -->
+        {{ $quality := 100 }}
+        {{ if ne $i 0 }}
+            <!-- Test the quality value in the middle between our bounds. -->
+            {{ $quality = add $lower_q (div (sub $upper_q $lower_q) 2 ) }} <!-- lower + (upper-lower)/2 -->
+
+            <!--
+                Make sure we stay within the bounds and test a new quality value.
+                With this check, we also make sure quality from within the [1, 100] range.
+                We don't combine the checks with "else if" because the bounds could have a difference of 1 - then we want to test the upper bound.
+            -->
+            {{ if ge $quality $upper_q }}
+                {{ $quality = sub $upper_q 1 }}
+            {{ end }}
+            {{ if le $quality $lower_q }}
+                {{ $quality = add $lower_q 1 }}
+            {{ end }}
+        {{ end }}
+
+        <!-- Generate a new image with selected quality. -->
+        {{ $options := printf "%s q%d" (delimit $new_dim "x") $quality }}
+        {{ $new_image := $original.Resize $options }}
+
+        <!-- Check the size of the new image. This line is a bit of a hack, but it seems we have no choice, see: https://discourse.gohugo.io/t/get-processed-image-file-size/13817/4 -->
+        {{ $sizeInBytes := len $new_image.Content }}
+
+        <!-- Debugging. -->
+        {{ if le $sizeInBytes 1 }}
+            {{ errorf "For some reason, resized image %s with options %s has file size %d." $original.Name $options $sizeInBytes }}
+        {{ end }}
+
+        <!-- Define new upper and lower bounds, save the image if the file size is not too large. -->
+        {{ if le $sizeInBytes $max_file_size }}
+            {{ $image   = $new_image }}
+            {{ $lower_q = $quality }}
+        {{ else }}
+            {{ $upper_q = sub $quality 1 }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+{{ return $image }}

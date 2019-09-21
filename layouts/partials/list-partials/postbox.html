@@ -1,0 +1,43 @@
+<!-- begin post -->
+<div class="col-lg-4 col-md-6 mb-30px card-group">
+    <div class="card h-100">{{ $img := partial "img/featured.html" . -}}{{ $class := "maxthumb" }}{{if eq .Page.Kind "taxonomy"}}{{ $class = "smallerthumb" }}{{ range first 1 .Data.Pages }}{{ $img = partial "img/featured.html" . }}{{ end }}{{ end }}
+        <div class="{{ $class }}">
+            <a href="{{ .RelPermalink }}">
+                {{with $img }}
+                    <img class="img-fluid" src="{{ .twitter.RelPermalink }}" alt="A thumbnail image">
+                {{end}}
+            </a>
+        </div>
+        <div class="card-body">
+            <h2 class="card-title"><a class="text-dark" href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            {{if eq .Page.Kind "taxonomy"}}
+            <h4 class="card-text">{{ len .Data.Pages }} post(s).</h4>
+            {{else}}
+               <h4 class="card-text">{{ .Description }}</h4>
+               <small>{{ range .Params.tags }}
+			[&nbsp;<a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>&nbsp;]
+			{{ end }}</small>
+               {{end}}
+        </div>
+        <div class="card-footer bg-white">
+            <div class="wrapfooter">
+                {{ $author := .Page.Params.author | default .Site.Params.author.name }}
+                {{ with partial "img/get.html" (dict "Search" $author "Page" .) }}
+                    <span class="meta-footer-thumb">
+                    <img class="author-thumb" src="{{ .RelPermalink }}" alt="{{ $author }}">
+                    </span>
+                    <span class="author-meta">
+                    <span class="post-name">{{ $author }}</a></span><br/>
+                {{end}}
+                {{if eq .Page.Kind "taxonomy" }}
+                {{else}}
+                <span class="post-date">{{ dateFormat "Jan 2, 2006" .PublishDate }} - {{ .ReadingTime }} min read </span>
+                </span>
+                <span class="post-read-more"><a href="{{ .URL }}" title="Read Story"><svg class="svgIcon-use" width="25" height="25" viewbox="0 0 25 25"><path d="M19 6c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v14.66h.012c.01.103.045.204.12.285a.5.5 0 0 0 .706.03L12.5 16.85l5.662 4.126a.508.508 0 0 0 .708-.03.5.5 0 0 0 .118-.285H19V6zm-6.838 9.97L7 19.636V6c0-.55.45-1 1-1h9c.55 0 1 .45 1 1v13.637l-5.162-3.668a.49.49 0 0 0-.676 0z" fill-rule="evenodd"></path></svg></a></span>
+                {{end}}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end post -->

@@ -5,8 +5,8 @@
 {{ define "main" }}
 <div class="main-content">
     <header class="text-center">
-        {{ with .Site.Params.index.picture }}
-        <img alt="Site Header" src="{{ . | urlize | relURL }}" class="rounded-circle text-center index-image">
+        {{ with partial "img/get.html" (dict "Search" "hero" "Page" .Page) }}
+        <img alt="Site Header" src="{{ .RelPermalink }}" class="rounded-circle text-center index-image">
         {{ end }}
         <h1 class="index-title">{{ .Site.Params.index.title }}</h1>
     </header>
@@ -52,6 +52,7 @@
         </section>
     </section>
 </div>
+<!-- TODO alert for ConvertKit -->
 {{ if isset .Site.Params.index "alertbar" }}
 {{ if .Site.Params.index.alertbar }}
 {{- partial "_shared/alertbar.html" . -}}

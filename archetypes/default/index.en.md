@@ -6,25 +6,24 @@
 {{- /* Convert minus to space and capitalize words. */ -}}
 title: "{{ replace $title "-" " " | title }}"
 subtitle: ""
+description: ""
 
 date: {{ .Date }}
 years: "{{ now.Year }}"
 lastmod: {{ .Date }}
 
-draft: true
-spellchecked: false
-shared: [] # 'twitter', 'facebook'
-meetedgar: [] # insert library entry IDs
-
 comments: true
 toc: false
-
-seo_title: ""
-description: ""
 
 categories: []
 tags:
  - untagged
 people: []
 orgs: []
+
+draft: true
+spellchecked: false
+
+shared: [] # e.g. ['twitter', 'facebook', 'linkedin']
+meetedgar: [] # insert library entry IDs
 ---

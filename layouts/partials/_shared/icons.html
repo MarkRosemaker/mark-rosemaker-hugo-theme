@@ -1,0 +1,11 @@
+{{ $icon := partial "img/get.html" (dict "Page" .Page "Search" "icon" ) }}
+
+{{- range $size := slice "57x57" "114x114" "72x72" "144x144" "60x60" "120x120" "76x76" "152x152" }}
+<link rel="apple-touch-icon" sizes="{{ . }}" href="{{ ($icon.Fill .).RelPermalink }}" />
+{{- end -}}
+
+{{- range $size := slice "57x57" "114x114" "72x72" "144x144" "60x60" "120x120" "76x76" "152x152" }}
+<link rel="icon" type="image/png" href="{{ ($icon.Fill .).RelPermalink }}" sizes="{{ . }}" />
+{{- end }}
+
+<link rel="icon" href="{{ $icon.RelPermalink }}">

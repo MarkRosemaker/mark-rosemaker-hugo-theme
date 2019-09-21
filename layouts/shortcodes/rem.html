@@ -1,0 +1,4 @@
+<!-- this serves as a way to put a comment in markdown without output -->
+{{ if and false (findRE "TODO" .Inner)}}
+{{ errorf "TODO (%s): %s" $.Page.Name (replaceRE "^TODO: |^TODO " "" .Inner) }}
+{{ end }}

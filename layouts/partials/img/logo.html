@@ -1,0 +1,7 @@
+{{ $logo := partial "img/get.html" (dict "Search" "logo" "Page" .Page "Height" 20) }}
+
+{{ if and (not $logo) (not .Page.Draft ) .Page.File }}
+    {{ errorf "Please put 'Logo.svg' or 'Logo.jpeg' in 'content/uploads'." }}
+{{ end }}
+
+{{ return $logo }}
